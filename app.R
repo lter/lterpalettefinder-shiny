@@ -6,6 +6,7 @@
 library(shiny)
 library(shinyWidgets)
 library(htmltools)
+# devtools::install_github("lter/lterpalettefinder", force = TRUE)
 library(lterpalettefinder)
 library(tidyverse)
 
@@ -46,31 +47,64 @@ ui <- shiny::fluidPage(
     # UI - Sidebar -------------------------
     shiny::sidebarPanel(
 
-      # UI - Sidebar - Step 1 --------------
+      # UI - Step 1 ------------------------
       htmltools::h3("1) Attach a Picture"),
       
       ## Actual fileInput
       shiny::fileInput(inputId = "photo_file",
-                       label = "PNG, JPEG, TIFF, and HEIC-format photos accepted",
-                       accept = c(".png", ".jpeg", ".jpg",
-                                  ".tiff", ".heic")),
+                       label = "PNG, JPEG, TIFF photos accepted",
+                       accept = c(".png", ".jpeg", ".jpg", ".tiff")),
       
-      # UI - Sidebar - Step 2 --------------
+      # UI - Step 2 -----------------------
       htmltools::h3("2) Extract Colors from Picture"),
+      
+      # Message
+      "This is equivalent to the function `palette_extract()`",
+      shiny::br(),
       
       ## Button
       shiny::actionButton(inputId = "extract_button",
-                          label = "Get Palette",
-                          icon = shiny::icon("brush")),
+                          label = "Extract",
+                          icon = shiny::icon("eye-dropper")),
       # Message
       shiny::verbatimTextOutput(outputId = "extract_message"),
+      
+      # Return the vector
+      "This function returns a vector of the hexadecimal codes of the 25 colors identified by `palette_extract()`",
+      shiny::verbatimTextOutput(outputId = "palette_vector"),
+      
+      # UI - Step 3 -----------------------
+      htmltools::h3("3) Print the Palette"),
+      
+      ## Button
+      shiny::actionButton(inputId = "print_button",
+                          label = "Display",
+                          icon = shiny::icon("brush")),
+      # Message
+      shiny::verbatimTextOutput(outputId = "print_message"),
+      
     ), # End `sidebarPanel(...`
-
+    
     # UI - Main panel ----------------------
     shiny::mainPanel(
       
-      verbatimTextOutput(outputId = "test_1")
+      # ggplot2 demo
+      shiny::column(width = 6,
+                    htmltools::h4(htmltools::strong("ggplot2 Demo")),
+                    
+                    "Generated with the function `palette_ggdemo()`",
+                    
+                    shiny::plotOutput(outputId = "extract_gg")
+                    ),
       
+      # Base R plot demo
+      shiny::column(width = 6,
+                    htmltools::h4(htmltools::strong("Base R Demo")),
+                    
+                    "Generated with the function `palette_demo()`",
+                    
+                    shiny::plotOutput(outputId = "extract_simp")
+                    )
     ), # End `mainPanel(...`
     
     # Add some arguments for the `sidebarLayout()` call
@@ -81,13 +115,13 @@ ui <- shiny::fluidPage(
 # Server Function ------------------------
 server <- function(input, output, session){
   
-  # UI - Sidebar - Step 2 ----------------
-  # Respond to button press
+  # Server - Step 2 ----------------------
+  # Respond to extract button press
   shiny::observeEvent(input$extract_button, {
     
     # Error out if no photo is attached
     if(base::is.null(input$photo_file)){
-      output$extract_message <- shiny::renderPrint({"No picture attached." })
+      output$extract_message <- shiny::renderPrint({"No picture attached."})
       
       # Otherwise: ...
       } else {
@@ -97,20 +131,45 @@ server <- function(input, output, session){
         # Extract palette
         your_colors <- lterpalettefinder::palette_extract(image = pic_path, sort = TRUE, progress_bar = FALSE)
         
+       
   # Print success message
-  output$extract_message <- shiny::renderPrint({"Success!"}) }
+  output$extract_message <- shiny::renderPrint({"Success!"})
+  
+  # Also print this as an output
+  output$palette_vector <- renderPrint({your_colors})
+  
+      } # Close `else{...`
+  }) # End extract button's `observeEvent(..., {...`
+  
+  # Server - Step 3 ----------------------
+  # Respond to print button press
+  shiny::observeEvent(input$print_button, {
+    # Error out if no photo is attached
+    if(base::is.null(input$photo_file)){
+      output$print_message <- shiny::renderPrint({"No picture attached."}) } else {
+      # Otherwise...
+        # Identify path again
+        pic_path <- input$photo_file$datapath
+        
+          # Strip out the colors again
+          your_colors <- lterpalettefinder::palette_extract(image = pic_path, sort = TRUE, progress_bar = FALSE)
+          
+          # Render both types of demo graph
+          ## ggplot2 demo
+          output$extract_gg <- shiny::renderPlot(
+            lterpalettefinder::palette_ggdemo(palette = your_colors) )
+          
+          ## Base R graph Demo
+          output$extract_simp <- shiny::renderPlot(
+            lterpalettefinder::palette_demo(palette = your_colors) )
+          
+          # Return a message
+          output$print_message <- renderPrint({"Success!"})
+      } # close the `else {...`
     
-    }) # End photo button's `observeEvent(..., {...`
-  
-  
-  # Test Outputs ---------------------------
-  
-  
+  }) # Close print button's `observeEvent(..., {...`
   
 } # End `server ... {...`
-
-
-
 
 # App Assembly ---------------------------
 shinyApp(ui = ui, server = server)

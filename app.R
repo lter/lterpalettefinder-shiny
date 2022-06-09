@@ -56,16 +56,14 @@ ui <- shiny::fluidPage(
                                   ".tiff", ".heic")),
       
       # UI - Sidebar - Step 2 --------------
-      htmltools::h3("2) Look at the Picture"),
+      htmltools::h3("2) Extract Colors from Picture"),
       
       ## Button
-      shiny::actionButton(inputId = "photo_button",
-                          label = "Display Picture",
-                          icon = shiny::icon("camera")),
-      # Image print
-      shiny::imageOutput(outputId = "photo_print"),
+      shiny::actionButton(inputId = "extract_button",
+                          label = "Get Palette",
+                          icon = shiny::icon("brush")),
       # Message
-      shiny::verbatimTextOutput(outputId = "photo_message"),
+      shiny::verbatimTextOutput(outputId = "extract_message"),
     ), # End `sidebarPanel(...`
 
     # UI - Main panel ----------------------
@@ -85,44 +83,28 @@ server <- function(input, output, session){
   
   # UI - Sidebar - Step 2 ----------------
   # Respond to button press
-  shiny::observeEvent(input$photo_button, {
+  shiny::observeEvent(input$extract_button, {
     
     # Error out if no photo is attached
     if(base::is.null(input$photo_file)){
-      output$photo_message <- shiny::renderPrint({"No picture attached." })
+      output$extract_message <- shiny::renderPrint({"No picture attached." })
+      
       # Otherwise: ...
       } else {
-        # Strip out path
+        # Identify path
         pic_path <- input$photo_file$datapath
         
-        # Render image
-  output$photo_print <- renderImage({
-    # Temp file to save output
-    outfile <- tempfile(fileext = ".png")
-    
-    # Read photo
-    magick_pointer <- magick::image_read(pic_path)
-    
-    # Generate plot
-    # png(outfile, width = 400, height = 300)
-    print(magick_pointer)
-    # dev.off()
-    
-    # Return list containing filename
-    list(src = outfile,
-         contentType = 'image/png',
-         width = 200,
-         height = 200,
-         alt = "User-supplied photo")
-    }, deleteFile = TRUE) 
-  
+        # Extract palette
+        your_colors <- lterpalettefinder::palette_extract(image = pic_path, sort = TRUE, progress_bar = FALSE)
+        
   # Print success message
-  output$photo_message <- shiny::renderPrint({"Success!"}) }
+  output$extract_message <- shiny::renderPrint({"Success!"}) }
+    
     }) # End photo button's `observeEvent(..., {...`
   
   
   # Test Outputs ---------------------------
-  output$test_1 <- renderPrint({input$photo_file$datapath})
+  
   
   
 } # End `server ... {...`

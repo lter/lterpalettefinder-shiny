@@ -23,7 +23,9 @@ ui <- shiny::fluidPage(
   # UI - Header Text ---------------------
   
   # Top level title
-  htmltools::h1("Welcome to ", htmltools::code("lterpalettefinder")),
+  shiny::headerPanel(list(title = htmltools::h1("Welcome to ", htmltools::code("lterpalettefinder")),
+                          img(src = "lterpalettefinder_hex.jpeg",
+                              height = 80, align = "right"))),
   
   # Subheading
   htmltools::h2("Overview"),

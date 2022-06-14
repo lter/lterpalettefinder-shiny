@@ -14,6 +14,8 @@ library(tidyverse)
 ui <- shiny::fluidPage(
   
   # UI - Aesthetic Customization ---------
+  # Add browser tab title
+  title = "lterpalettefinder",
   
   # Set background color
   shinyWidgets::setBackgroundColor(color = 'ghostwhite',
@@ -24,7 +26,7 @@ ui <- shiny::fluidPage(
   
   # Top level title
   shiny::headerPanel(list(title = htmltools::h1("Welcome to ", htmltools::code("lterpalettefinder")),
-                          img(src = "lterpalettefinder_hex.jpeg",
+                          img(src = "lterpalettefinder_hex.png",
                               height = 80, align = "right"))),
   
   # Subheading

@@ -5,8 +5,10 @@
 # Load libraries
 # install.packages("librarian")
 library(librarian)
-librarian::shelf(htmltools,
+librarian::shelf(bslib,
+                 htmltools,
                  lter/lterpalettefinder,
+                 sass,
                  shiny,
                  shinyWidgets,
                  tidyverse)
@@ -18,17 +20,20 @@ ui <- shiny::fluidPage(
   # Add browser tab title
   title = "lterpalettefinder",
   
-  # Set background color
-  shinyWidgets::setBackgroundColor(color = 'ghostwhite',
-                                   gradient = "linear",
-                                   direction = "bottom"),
+  # Develop custom theme
+  ui <- fluidPage(
+    theme = bslib::bs_theme(
+      bg = "#f0f0f0", # Background
+      fg = "#000000", # Font color ('foreground')
+      primary = "#2b8cbe" # Hyperlink color ('1° accent color')
+      ) ),
   
   # UI - Header Text ---------------------
   
   # Top level title
   shiny::headerPanel(list(title = htmltools::h1("Welcome to ", htmltools::code("lterpalettefinder")),
                           img(src = "lterpalettefinder_hex.png",
-                              height = 80, align = "right"))),
+                              height = 200, align = "right"))),
   
   # Subheading
   htmltools::h2("Overview"),
@@ -53,7 +58,7 @@ ui <- shiny::fluidPage(
       
       ## Actual fileInput
       shiny::fileInput(inputId = "photo_file",
-                       label = "PNG, JPEG, TIFF photos accepted",
+                       label = "PNG, JPEG, and TIFF photos accepted",
                        accept = c(".png", ".jpeg", ".jpg", ".tiff")),
       
       # UI - Step 2 -----------------------

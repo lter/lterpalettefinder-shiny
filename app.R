@@ -64,6 +64,10 @@ ui <- shiny::fluidPage(
       # UI - Step 2 -----------------------
       htmltools::h2("2) Extract the Colors"),
       
+      # Add a note on the time it takes to complete
+      "Note that this step may take a few seconds depending on file size.",
+      shiny::br(),
+      
       # Message
       htmltools::h4("Completed with the function", htmltools::code("palette_extract()")),
       shiny::br(),
@@ -72,6 +76,7 @@ ui <- shiny::fluidPage(
       shiny::actionButton(inputId = "extract_button",
                           label = "Extract",
                           icon = shiny::icon("eye-dropper")),
+      
       # Message
       shiny::textOutput(outputId = "extract_message")
       

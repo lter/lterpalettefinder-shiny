@@ -69,7 +69,7 @@ ui <- shiny::fluidPage(
       shiny::br(),
       
       # Message
-      htmltools::h4("Completed with the function", htmltools::code("palette_extract()")),
+      htmltools::h4("Completed with the function", htmltools::code("palette_extract")),
       shiny::br(),
       
       ## Button
@@ -88,7 +88,7 @@ ui <- shiny::fluidPage(
       # ggplot2 demo
       htmltools::h3(htmltools::strong("ggplot2 Demo")),
       htmltools::h4("Generated with the function",
-                      htmltools::code("palette_ggdemo()")),
+                      htmltools::code("palette_ggdemo")),
       shiny::br(),
       
       shiny::plotOutput(outputId = "extract_gg",
@@ -98,7 +98,7 @@ ui <- shiny::fluidPage(
       # Base R plot demo
       htmltools::h3(htmltools::strong("Base R Demo")),
       htmltools::h4("Generated with the function",
-                      htmltools::code("palette_demo()")),
+                      htmltools::code("palette_demo")),
       shiny::br(),
       
       shiny::plotOutput(outputId = "extract_simp",
@@ -106,7 +106,7 @@ ui <- shiny::fluidPage(
                         height = "300px")
     ), # End `mainPanel(...`
     
-    # Add some arguments for the `sidebarLayout()` call
+    # Add some arguments for the `sidebarLayout` call
     position = 'left', fluid = TRUE) # close `sidebarLayout(...`
 
 ) # End `fluidPage(...`

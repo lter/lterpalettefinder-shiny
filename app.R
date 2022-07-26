@@ -140,7 +140,7 @@ server <- function(input, output, session){
   
   ## Base R graph Demo
   output$extract_simp <- shiny::renderPlot(
-    lterpalettefinder::palette_demo(palette = your_colors) )
+    lterpalettefinder::palette_demo(palette = your_colors, export = FALSE) )
   
       } # Close `else{...`
   }) # End extract button's `observeEvent(..., {...`

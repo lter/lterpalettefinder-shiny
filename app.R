@@ -3,15 +3,9 @@
 ## ------------------------------------ ##
 
 # Load libraries
-# install.packages("librarian")
-library(librarian)
-librarian::shelf(bslib,
-                 htmltools,
-                 lter/lterpalettefinder,
-                 sass,
-                 shiny,
-                 shinyWidgets,
-                 tidyverse)
+# devtools::install_github("lter/lterpalettefinder", force = TRUE)
+library(htmltools); library(lterpalettefinder)
+library(sass); library(shiny); library(shinyWidgets); library(tidyverse)
 
 # User Interface -------------------------
 ui <- shiny::fluidPage(

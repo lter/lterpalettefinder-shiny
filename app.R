@@ -4,8 +4,13 @@
 
 # Load libraries
 # devtools::install_github("lter/lterpalettefinder", force = TRUE)
-library(htmltools); library(lterpalettefinder)
-library(sass); library(shiny); library(shinyWidgets); library(tidyverse)
+library(htmltools); library(lterpalettefinder); library(sass)
+library(shiny); library(shinyWidgets); library(tidyverse)
+
+# Manually load lterpalettefinder dependencies
+library(dplyr); library(ggplot2); library(graphics); library(grDevices)
+library(jpeg); library(magick); library(magrittr); library(png)
+library(stats); library(tools); library(tidyr); library(tiff)
 
 # User Interface -------------------------
 ui <- shiny::fluidPage(
